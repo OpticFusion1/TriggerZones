@@ -39,6 +39,9 @@ public class RegionManager {
                 Set<Region> regionSet = regionMap.get(key);
                 if (regionSet != null) {
                     regionSet.remove(region);
+                    if (regionSet.isEmpty()) {
+                        regionMap.remove(key);
+                    }
                 }
             }
         }

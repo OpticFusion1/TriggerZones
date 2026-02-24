@@ -30,9 +30,29 @@ public class TriggerZone extends Region {
         getConditionList(type).add(condition);
     }
 
+    public void removeCondition(TriggerEvent type, TriggerComponent condition) {
+        Objects.requireNonNull(condition, "Condition cannot be null");
+        getConditionList(type).remove(condition);
+    }
+
+    public void clearConditions(TriggerEvent type) {
+        Objects.requireNonNull(type, "Event type cannot be null");
+        getConditionList(type).clear();
+    }
+
     public void addAction(TriggerEvent type, TriggerComponent action) {
         Objects.requireNonNull(action, "Action cannot be null");
         getActionList(type).add(action);
+    }
+
+    public void removeAction(TriggerEvent type, TriggerComponent action) {
+        Objects.requireNonNull(action, "Action cannot be null");
+        getActionList(type).remove(action);
+    }
+
+    public void clearActions(TriggerEvent type) {
+        Objects.requireNonNull(type, "Event type cannot be null");
+        getActionList(type).clear();
     }
 
     public boolean allConditionsMet(TriggerEvent type, TriggerContext context) {
