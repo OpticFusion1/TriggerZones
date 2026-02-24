@@ -55,9 +55,8 @@ public class RegionManager {
     public Set<Region> getRegionsForLocation(Location location) {
         Vector position = location.toVector();
         Set<Region> regions = new HashSet<>();
-
         for (Region region : getRegions(location.getChunk())) {
-            if (region.getBounds().contains(position)) {
+            if (region.isInSameWorld(location) && region.getBounds().contains(position)) {
                 regions.add(region);
             }
         }
