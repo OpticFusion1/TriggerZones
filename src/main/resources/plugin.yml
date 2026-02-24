@@ -4,3 +4,5 @@ version: ${project.version}
 author: Optic_Fusion1
 main: optic_fusion1.triggerzones.TriggerZones
 api-version: 1.13
+libraries:
+  - fastutil:fastutil:5.0.9
