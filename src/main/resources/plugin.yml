@@ -1,0 +1,6 @@
+name: TriggerZones
+description: Allows developers to easily create Trigger Zones
+version: ${project.version}
+author: Optic_Fusion1
+main: optic_fusion1.triggerzones.TriggerZones
+api-version: 1.13
