@@ -8,8 +8,8 @@ import org.bukkit.World;
 
 public class Region {
 
-    private final BoundingBox bounds;
-    private final UUID worldId;
+    private BoundingBox bounds;
+    private UUID worldId;
 
     public Region(Location minCorner, Location maxCorner) {
         bounds = normalizeBounds(minCorner, maxCorner);
@@ -19,6 +19,11 @@ public class Region {
     public Region(World world, BoundingBox bounds) {
         this.worldId = world.getUID();
         this.bounds = bounds;
+    }
+
+    public void updateLocation(Location minCorner, Location maxCorner) {
+        bounds = normalizeBounds(minCorner, maxCorner);
+        worldId = minCorner.getWorld().getUID();
     }
 
     private BoundingBox normalizeBounds(Location firstCorner, Location secondCorner) {
@@ -37,7 +42,6 @@ public class Region {
         int maxZ = Math.max(firstCorner.getBlockZ(), secondCorner.getBlockZ()) + 1;
         return new BoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
     }
-
 
     public boolean isInSameWorld(Location location) {
         return location.getWorld() != null && worldId.equals(location.getWorld().getUID());
