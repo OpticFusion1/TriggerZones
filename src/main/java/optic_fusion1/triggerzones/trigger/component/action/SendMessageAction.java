@@ -1,8 +1,8 @@
-package optic_fusion1.triggerzones.trigger.component;
+package optic_fusion1.triggerzones.trigger.component.action;
 
 import optic_fusion1.triggerzones.trigger.TriggerContext;
 
-public class SendMessageAction implements TriggerComponent {
+public class SendMessageAction implements TriggerAction {
 
     private String message;
 
@@ -11,9 +11,8 @@ public class SendMessageAction implements TriggerComponent {
     }
 
     @Override
-    public boolean execute(TriggerContext ctx) {
+    public void execute(TriggerContext ctx) {
         ctx.getPlayer().sendMessage(message);
-        return true;
     }
 
 }

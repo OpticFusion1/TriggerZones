@@ -35,33 +35,42 @@ public class TriggerZoneListener implements Listener {
             return;
         }
         UUID playerId = player.getUniqueId();
-        Set<TriggerZone> previousZones = playerCurrentZones.getOrDefault(playerId, new HashSet<>());
+        Set<TriggerZone> previousZones = playerCurrentZones.getOrDefault(playerId, Set.of());
         Set<TriggerZone> currentZones = new HashSet<>();
+
+        // 1) Compute the set of zones that are "current" right now:
+        //    - player is physically within the zone (regionManager says so)
+        //    - ENTER requirements are met
         for (Region region : regionManager.getRegionsForLocation(to)) {
             if (!(region instanceof TriggerZone zone)) {
                 continue;
             }
-            TriggerContext ctx = new TriggerContext(zone, null, player, from, to);
-            if (zone.allConditionsMet(TriggerEvent.ENTER, ctx)) {
+
+            TriggerContext reqCtx = new TriggerContext(zone, TriggerZone.TriggerEvent.ENTER, player, from, to);
+            if (zone.allRequirementsMet(TriggerZone.TriggerEvent.ENTER, reqCtx)) {
                 currentZones.add(zone);
             }
         }
-        // TODO: Could probably be merged with the above loop
+
+        // 2) Enter actions: zones newly becoming current
         for (TriggerZone zone : currentZones) {
             if (!previousZones.contains(zone)) {
-                TriggerContext ctx = new TriggerContext(zone, TriggerZone.TriggerEvent.ENTER, player, from, to);
-                zone.onEnter(ctx);
+                TriggerContext enterCtx = new TriggerContext(zone, TriggerZone.TriggerEvent.ENTER, player, from, to);
+                zone.onEnter(enterCtx);
             }
         }
+
+        // 3) Exit actions: zones no longer current
         for (TriggerZone zone : previousZones) {
-            if (currentZones.contains(zone)) {
-                continue;
-            }
-            TriggerContext ctx = new TriggerContext(zone, TriggerZone.TriggerEvent.LEAVE, player, from, to);
-            if (zone.allConditionsMet(TriggerZone.TriggerEvent.LEAVE, ctx)) {
-                zone.onExit(ctx);
+            if (!currentZones.contains(zone)) {
+                TriggerContext leaveCtx = new TriggerContext(zone, TriggerZone.TriggerEvent.LEAVE, player, from, to);
+                if (zone.allRequirementsMet(TriggerZone.TriggerEvent.LEAVE, leaveCtx)) {
+                    zone.onExit(leaveCtx);
+                }
             }
         }
+
+        // 4) Persist
         playerCurrentZones.put(playerId, currentZones);
     }
 
